@@ -1,24 +1,22 @@
-# Чат с общей комнатой
+# FastApi Chat Socket
 
-### Описание:
-Проект для ознакомления с вебсокетами и инструментами работы с ними.
-
----
-### Демонстрация:
-После запуска проекта пройдите по ссылкам:
-+ [**Чат** - http://localhost:8000/pages/chat](http://localhost:8000/pages/chat)
-+ [**Swagger** - http://localhost:8000/docs](http://localhost:8000/docs) 
+### О приложении:
+Асинхронный чат с поддержкой клиентов на веб-сокетах
 
 ---
-### Как запустить:
+### Запуск:
 ```bash
 docker compose up --build
 ```
 
 ---
+### Демонстрация:
+После запуска перейдите по ссылкам для демонстрации:
++ [**Чат** - http://localhost:8000/pages/chat](http://localhost:8000/pages/chat)
++ [**Swagger** - http://localhost:8000/docs](http://localhost:8000/docs) 
+
+---
 ### Стек:
-+ FastAPI
-+ Websockets
++ FastAPI + PyDantic
 + SQLAlchemy + alembic
-+ Jinja2
 + Docker
