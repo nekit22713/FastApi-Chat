@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<div class="flex flex-col items-center">
+    <h1>WebSocket Chat</h1>
+    <h2>Your ID: <span id="ws-id"></span></h2>
+    <ul id='messages' class="h-96 w-96 overflow-scroll border-double border-2 border-indigo-300 py-3 px-2"></ul>
+    <form action="" onsubmit="sendMessage(event)">
+        <input class="mt-3 py-1 px-2 bg-green-200 text-gray-800" type="text" id="messageText" autocomplete="off"/>
+        <button class="ml-1">Send</button>
+    </form>
+</div>
+<script>
+    async function getLastMessages() {
+        const url = 'http://localhost:8000/chat/last_messages'
+        const response = await fetch(url, {
+            method: 'GET'
+        })
+        return response.json()
+    }
+
+    getLastMessages()
+        .then(messages => {
+            appendMessage({message: "Предыдущие 5 сообщений:"})
+            messages.forEach(msg => {
+                appendMessage(msg)
+            })
+        })
+    
+    let messages = document.getElementById('messages')
+    
+    function appendMessage(msg) {
+        let message = document.createElement('li'),
+            content = document.createTextNode(msg.message)
+        
+        if (msg.client_id) {
+            message.innerHTML = `<span class="font-medium">Client #${msg.client_id}: </span>`
+        }
+        message.classList.add('break-words')
+        message.appendChild(content)
+        messages.appendChild(message)
+        messages.scrollTop = messages.scrollHeight;
+    }
+
+    let client_id = Date.now()
+    document.querySelector("#ws-id").textContent = client_id;
+    let ws = new WebSocket(`ws://localhost:8000/chat/ws/${client_id}`);
+    ws.onmessage = function (event) {
+        appendMessage(JSON.parse(event.data))
+    };
+
+    function sendMessage(event) {
+        event.preventDefault()
+        let input = document.getElementById("messageText")
+        if (input.value.trim() === '') return
+
+        ws.send(input.value.trim())
+        input.value = ''
+    }
+</script>
+{% endblock %}
